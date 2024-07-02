@@ -28,32 +28,11 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background,
                 ) {
                     BakingScreen()
+//                    ProductDetailsScreen()
                 }
             }
         }
 
-        // Initialize the Vertex AI service and the generative model
-        // Specify a model that supports your use case
-        // Gemini 1.5 models are versatile and can be used with all API capabilities
-        val generativeModel = Firebase.vertexAI.generativeModel("gemini-1.5-flash")
-        CoroutineScope(Dispatchers.Main).launch {
-            callVertexAI()
-        }
-    }
-
-    suspend fun callVertexAI() {
-        // Initialize the Vertex AI service and the generative model
-        // Specify a model that supports your use case
-        // Gemini 1.5 models are versatile and can be used with all API capabilities
-        val generativeModel = Firebase.vertexAI.generativeModel("gemini-1.5-flash")
-
-        // Provide a prompt that contains text
-        val prompt = "Write a story about a magic backpack."
-
-        // To generate text output, call generateContent with the text input
-        val response = generativeModel.generateContent(prompt)
-        print(response.text)
-        Log.d("MainActivity", response.text!!)
     }
 }
 

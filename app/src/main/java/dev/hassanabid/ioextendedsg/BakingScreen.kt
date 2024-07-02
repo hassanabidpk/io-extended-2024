@@ -38,19 +38,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 
-val images = arrayOf(
-    // Image generated using Gemini from the prompt "cupcake image"
-    R.drawable.cricket_image_1,
-    // Image generated using Gemini from the prompt "cookies images"
-    R.drawable.football_image_1,
-    // Image generated using Gemini from the prompt "cake images"
-    R.drawable.tennis_image_1,
-)
-val imageDescriptions = arrayOf(
-    R.string.image1_description,
-    R.string.image2_description,
-    R.string.image3_description,
-)
 
 @Composable
 fun BakingScreen(
@@ -76,23 +63,7 @@ fun BakingScreen(
         LazyRow(
             modifier = Modifier.fillMaxWidth()
         ) {
-            itemsIndexed(images) { index, image ->
-                var imageModifier = Modifier
-                    .padding(start = 8.dp, end = 8.dp)
-                    .requiredSize(200.dp)
-                    .clickable {
-                        selectedImage.intValue = index
-                    }
-                if (index == selectedImage.intValue) {
-                    imageModifier =
-                        imageModifier.border(BorderStroke(4.dp, MaterialTheme.colorScheme.primary))
-                }
-                Image(
-                    painter = painterResource(image),
-                    contentDescription = stringResource(imageDescriptions[index]),
-                    modifier = imageModifier
-                )
-            }
+
         }
 
         Row(
@@ -110,11 +81,7 @@ fun BakingScreen(
 
             Button(
                 onClick = {
-                    val bitmap = BitmapFactory.decodeResource(
-                        context.resources,
-                        images[selectedImage.intValue]
-                    )
-                    bakingViewModel.sendPrompt(bitmap, prompt)
+                    bakingViewModel.sendPrompt(prompt)
                 },
                 enabled = prompt.isNotEmpty(),
                 modifier = Modifier
