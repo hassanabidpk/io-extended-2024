@@ -8,4 +8,10 @@
     <string name="image2_description">Football</string>
     <string name="image3_description">Tennis</string>
     <string name="results_placeholder">Results will appear here</string>
+    <string name="chat_label">Message</string>
+    <string name="action_send">Send</string>
+    <string name="activity_title">Help me place coffee/tea order</string>
+    <string name="activity_subtitle">Function calling Sample</string>
+
+
 </resources>
