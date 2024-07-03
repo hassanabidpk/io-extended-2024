@@ -6,6 +6,8 @@
 /.idea/modules.xml
 /.idea/workspace.xml
 /.idea/navEditor.xml
+.idea/misc.xml
+.idea/other.xml
 /.idea/assetWizardSettings.xml
 .idea/appInsightsSettings.xml
 .idea/gradle.xml

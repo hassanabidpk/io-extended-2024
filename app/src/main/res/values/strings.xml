@@ -1,11 +1,17 @@
 <resources>
     <string name="app_name">IOExtendedSG</string>
     <string name="action_go">Go</string>
-    <string name="baking_title">Sports with Gemini</string>
+    <string name="baking_title">Function Calling with Vertex AI</string>
     <string name="label_prompt">Prompt</string>
-    <string name="prompt_placeholder">Provide a description of sports in the image</string>
+    <string name="prompt_placeholder">How much is 50 Singapore dollars worth in Malaysian?</string>
     <string name="image1_description">Cricket</string>
     <string name="image2_description">Football</string>
     <string name="image3_description">Tennis</string>
     <string name="results_placeholder">Results will appear here</string>
+    <string name="chat_label">Message</string>
+    <string name="action_send">Send</string>
+    <string name="activity_title">Help me place coffee/tea order</string>
+    <string name="activity_subtitle">Function calling Sample</string>
+
+
 </resources>

@@ -33,4 +33,5 @@ Gemini API using the Vertex AI for Firebase SDK  (for production-grade VertexAI 
 ### Features
 This sample showcases the following API capablilites:
 
-Photo Reasoning - demonstrates the MultiModal feature from the SDK
+- Chat Prompts
+- Function Calling
