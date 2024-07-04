@@ -45,7 +45,9 @@ class MainActivity : ComponentActivity() {
                             .padding(innerPadding),
                         color = MaterialTheme.colorScheme.background,
                     ) {
-                        ChatScreen()
+                        ChatScreen(
+                            onPhotoPickerClick = {}
+                        )
                     }
                 }
             }
@@ -84,5 +86,5 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun DefaultPreview() {
-    ChatScreen()
+    ChatScreen(onPhotoPickerClick = {})
 }

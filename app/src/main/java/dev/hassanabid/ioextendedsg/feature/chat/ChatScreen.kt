@@ -16,6 +16,9 @@
 
 package dev.hassanabid.ioextendedsg.feature.chat
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,17 +33,22 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -58,10 +66,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import dev.hassanabid.ioextendedsg.R
+import dev.hassanabid.ioextendedsg.ui.theme.IOExtendedSGTheme
 
 @Composable
 internal fun ChatScreen(
-    chatViewModel: ChatViewModel = viewModel(factory = GenerativeViewModelFactory)
+    chatViewModel: ChatViewModel = viewModel(factory = GenerativeViewModelFactory),
+    onPhotoPickerClick: () -> Unit,
 ) {
     val chatUiState by chatViewModel.uiState.collectAsState()
     val listState = rememberLazyListState()
@@ -73,6 +83,7 @@ internal fun ChatScreen(
                 onSendMessage = { inputText ->
                     chatViewModel.sendMessage(inputText)
                 },
+                onPhotoPickerClick = onPhotoPickerClick,
                 resetScroll = {
                     coroutineScope.launch {
                         listState.scrollToItem(0)
@@ -170,19 +181,30 @@ fun ChatBubbleItem(
 @Composable
 fun MessageInput(
     onSendMessage: (String) -> Unit,
+    onPhotoPickerClick: () -> Unit,
     resetScroll: () -> Unit = {}
 ) {
     var userMessage by rememberSaveable { mutableStateOf("") }
 
     ElevatedCard(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxWidth(),
+        elevation = CardDefaults.elevatedCardElevation(3.dp)
     ) {
         Row(
             modifier = Modifier
                 .padding(16.dp)
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {
+            IconButton(onClick = onPhotoPickerClick) {
+                Icon(
+                    imageVector = Icons.Default.PhotoLibrary,
+                    contentDescription = "Select Photo or video",
+                    tint = MaterialTheme.colorScheme.primary,
+                )
+            }
             OutlinedTextField(
                 value = userMessage,
                 label = { Text(stringResource(R.string.chat_label)) },
@@ -217,4 +239,53 @@ fun MessageInput(
             }
         }
     }
+}
+
+// TopAppBar is marked as experimental in Material 3
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AppBar() {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        TopAppBar(
+            title = { Text(stringResource(R.string.activity_title)) },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                titleContentColor = MaterialTheme.colorScheme.primary,
+            ),
+        )
+        Box(
+            modifier = Modifier.background(MaterialTheme.colorScheme.surfaceContainer)
+        ) {
+            Text(
+                text = stringResource(R.string.activity_subtitle),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.fillMaxWidth()
+                    .padding(8.dp)
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewChatContent() {
+    IOExtendedSGTheme {
+        Scaffold(
+            topBar = { AppBar() }
+        ) { innerPadding ->
+            // A surface container using the 'background' color from the theme
+            Surface(
+                modifier = Modifier.fillMaxSize()
+                    .padding(innerPadding),
+                color = MaterialTheme.colorScheme.background,
+            ) {
+                ChatScreen(
+                    onPhotoPickerClick = {})
+            }
+        }
+    }
+
 }

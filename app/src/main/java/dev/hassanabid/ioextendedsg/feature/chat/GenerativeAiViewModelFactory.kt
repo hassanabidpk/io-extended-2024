@@ -19,6 +19,7 @@ package dev.hassanabid.ioextendedsg.feature.chat
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.Schema
@@ -26,7 +27,11 @@ import com.google.ai.client.generativeai.type.Tool
 import com.google.ai.client.generativeai.type.content
 import com.google.ai.client.generativeai.type.defineFunction
 import com.google.ai.client.generativeai.type.generationConfig
+import com.hassan.myaiapplication.ApiInterface
+import com.hassan.myaiapplication.Order
+import com.hassan.myaiapplication.RetrofitClient
 import dev.hassanabid.ioextendedsg.BuildConfig
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.time.LocalDate
 import java.time.format.TextStyle
@@ -48,59 +53,6 @@ val GenerativeViewModelFactory = object : ViewModelProvider.Factory {
         /*val today = DayOfWeek.of(dow).toString()*/
         Log.d("ViewModelFactory","date : $date day : $dayName")
 
-        val systemInstructions = "You are a food & beverages delivery app, who orders Coffee or Tea based on my " +
-                "Today : $date and $dayName" +
-                "Location/Address : Posts and Telecommunications Institute of Technology, " +
-                "96A, Tran Phu Street, Ha Dong District, Hanoi. "
-
-        val pastOrderDummyData = "preferences and past orders. " +
-                "Monday : Milk tea with muffin, Tuesday : Black Coffee " +
-                "with cupcake, " +
-                "Wednesday : Latte, Thursday : Bubble tea with 25% sugar, " +
-                "Friday : Black coffee with croissant, " +
-                "Saturday: Vietnamese coffee with Banh mi" +
-                "Preferences : 1. decaf on Monday 2. Normal on other days "
-
-        suspend fun makePastOrdersApiRequest(
-            currentLocation: String
-        ): JSONObject {
-            // This hypothetical API returns a JSON such as:
-            // {"foodItems":"milk tea","whichDay":"muffin"}
-            return JSONObject().apply {
-                put("foodItems", pastOrderDummyData)
-                put("whichDay", "$dayName")
-            }
-        }
-
-        suspend fun makePlaceOrderApiRequest(
-            order: String,
-            address : String
-        ): JSONObject {
-            // This hypothetical API returns a JSON such as:
-            // {"foodItems":"milk tea","whichDay":"muffin"}
-            return JSONObject().apply {
-                put("response", "Order placed for $order to be delivered to $address")
-            }
-        }
-
-        val placeOrderFunction = defineFunction(
-            "placeOrder",
-            "Place order of coffee or Tea",
-            Schema.str("orderSummary", "Type of coffee or tea to order. Also add any additional food item"),
-            Schema.str("address", "address to deliver food items")
-        ) { order, address ->
-            makePlaceOrderApiRequest(order, address)
-        }
-
-        val pastOrdersFunction = defineFunction(
-            name = "getPastOrders",
-            description = "Get list of past orders of drinks or snacks day-wise. Include preferences if any",
-            Schema.str("location", "Current address or city")
-        ) { currentLocation ->
-            // Call the api function that you declared above
-            makePastOrdersApiRequest(currentLocation)
-        }
-
         return with(viewModelClass) {
             when {
                 isAssignableFrom(ChatViewModel::class.java) -> {
@@ -109,8 +61,6 @@ val GenerativeViewModelFactory = object : ViewModelProvider.Factory {
                         modelName = "gemini-1.5-flash",
                         apiKey = BuildConfig.apiKey,
                         generationConfig = config,
-                        systemInstruction = content { text(systemInstructions)},
-                        tools = listOf(Tool(listOf(placeOrderFunction, pastOrdersFunction)))
                     )
                     ChatViewModel(generativeModel)
                 }
@@ -121,4 +71,6 @@ val GenerativeViewModelFactory = object : ViewModelProvider.Factory {
 
         } as T
     }
+
 }
+
