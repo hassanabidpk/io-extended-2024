@@ -1,5 +1,5 @@
 # io-extended-2024
-Note : This project is tested with BrowserStack.
+This project is tested with BrowserStack
 
 This Android sample app demonstrates how to use state-of-the-art generative AI models (like Gemini) to build AI-powered features and applications. It includes both gnerative AI SDK for prototyping as well as VertexAI Firebase SDK for production-grade applications.
 
